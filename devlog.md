@@ -7,3 +7,12 @@ I plan to code the whole project in python and in one main.py file.
 For this first session, I just plan to look at making threads.
 I have made a repo on GitHub and will upload all the project information to the repo.
 The plan is to at least start with main.py and create threads.
+
+# 11-2-2026 12:19pm - Session 1 End
+I created main.py.
+I found out how to make basic threads with python. 
+I made a function that prints when a threads starts and finishes for now.
+It works with the three teller threads that I tested. 
+So far main.py runs and prints when the three tellers start and finish.
+In the next session I plan to add shared bank resources.
+I will probably experiment with semaphores to control how multiple threads access them.
