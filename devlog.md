@@ -16,3 +16,10 @@ It works with the three teller threads that I tested.
 So far main.py runs and prints when the three tellers start and finish.
 In the next session I plan to add shared bank resources.
 I will probably experiment with semaphores to control how multiple threads access them.
+
+# 11-2-2026 8:11pm - Session 2 Start
+Right now I have main.py working with three tellers using the threading Python module.
+main.py only creates teller threads and doesn't have any shared bank resources yet
+I looked at the example programs to see how semaphores work and how they can control access to shared variables.
+I will probably need semaphores for the safe, manager, door, and waiting line.
+In this session I will try to add shared bank resources to main.py.
