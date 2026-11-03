@@ -23,3 +23,14 @@ main.py only creates teller threads and doesn't have any shared bank resources y
 I looked at the example programs to see how semaphores work and how they can control access to shared variables.
 I will probably need semaphores for the safe, manager, door, and waiting line.
 In this session I will try to add shared bank resources to main.py.
+
+# 11-2-2026 9:04pm - Session 2 End
+I added shared bank resources to main.py.
+I created 50 customers and made semaphores for the safe, manager, door, and waiting line.
+The safe and door allow two threads at a time.
+The manager and waiting line only allow one thread at a time.
+I tested the safe semaphore using the three teller threads from the last session.
+I ran into some bugs.
+I forgot to release a semaphore and I had acquire() and release() in the wrong order so a teller aquired access to the safe but never released it.
+The bugs were fixed and the program ran eventually ran successfully.
+I noticed that the third teller had to wait until one of the first two tellers released the safe.
