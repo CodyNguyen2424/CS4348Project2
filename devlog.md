@@ -43,3 +43,12 @@ I will have just one customer and one teller to keep things simple.
 The customer will join the waiting line and signal the teller that someone is waiting.
 The teller will then select the customer from the queue, and the customer will introduce itself.
 I will use semaphores to make sure both threads communicate in the correct order.
+
+# 11-2-2026 9:28pm - Session 3 End
+The code should allow one customer and one teller to communicate.
+It stores customer information and I added semaphores to control when the customer gets selected.
+I was able to get some basic customer-teller interaction.
+There are currently some bugs.
+The program now gets stuck and hangs while getting a teller.
+The teller waits indefinitely for a customer and the customer cannot proceed after being selected.
+I plan to fix these bugs in the next session before adding more tellers and customers.
