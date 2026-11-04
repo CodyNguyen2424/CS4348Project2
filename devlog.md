@@ -34,3 +34,12 @@ I ran into some bugs.
 I forgot to release a semaphore and I had acquire() and release() in the wrong order so a teller aquired access to the safe but never released it.
 The bugs were fixed and the program ran eventually ran successfully.
 I noticed that the third teller had to wait until one of the first two tellers released the safe.
+
+# 11-2-2026 8:02pm - Session 3 Start
+Right now, main.py has semaphores for the safe, manager, door, and waiting line.
+The program currently only tests how three tellers access the safe.
+I plan to work on communication between one customer and one teller.
+I will have just one customer and one teller to keep things simple.
+The customer will join the waiting line and signal the teller that someone is waiting.
+The teller will then select the customer from the queue, and the customer will introduce itself.
+I will use semaphores to make sure both threads communicate in the correct order.
