@@ -5,37 +5,53 @@ from collections import deque
 
 NUM_TELLERS = 3
 NUM_CUSTOMERS = 50
+TEST_CUSTOMERS = 10
 
 # Shared bank resources
 safe_sem = threading.Semaphore(2)
 manager_sem = threading.Semaphore(1)
 door_sem = threading.Semaphore(2)
 line_lock = threading.Semaphore(1)
+print_lock = threading.Semaphore(1)
 
 # When customers arrive
 customers_waiting = threading.Semaphore(0)
 waiting_line = deque()
 
 
+def print_action(message):
+    # Keep output lines from mixing
+    print_lock.acquire()
+    print(message)
+    print_lock.release()
+
+
 def teller_worker(teller_id):
-    print(f"Teller {teller_id} []: ready to serve")
-    print(f"Teller {teller_id} []: waiting for a customer")
+    while True:
+        print_action(f"Teller {teller_id} []: ready to serve")
+        print_action(f"Teller {teller_id} []: waiting for a customer")
 
-    customers_waiting.acquire()
+        customers_waiting.acquire()
 
-    line_lock.acquire()
-    customer_info = waiting_line.popleft()
-    line_lock.release()
+        line_lock.acquire()
+        customer_info = waiting_line.popleft()
+        line_lock.release()
 
-    customer_id = customer_info["id"]
-    customer_info["teller_id"] = teller_id
+        # Stop once no customers remain
+        if customer_info is None:
+            print_action(f"Teller {teller_id} []: thread finished")
+            break
 
-    # Wait for customer introduction
-    customer_info["introduced"].acquire()
-    print(f"Teller {teller_id} [Customer {customer_id}]: serving a customer")
+        customer_id = customer_info["id"]
+        customer_info["teller_id"] = teller_id
+        customer_info["called"].release()
 
-    customer_info["acknowledged"].release()
-    print(f"Teller {teller_id} []: thread finished")
+        # Wait for customer introduction
+        customer_info["introduced"].acquire()
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: serving a customer")
+
+        time.sleep(0.05)
+        customer_info["acknowledged"].release()
 
 
 def customer_worker(customer_id):
@@ -48,46 +64,59 @@ def customer_worker(customer_id):
         "acknowledged": threading.Semaphore(0)
     }
 
-    print(f"Customer {customer_id} []: getting in line.")
+    print_action(f"Customer {customer_id} []: getting in line.")
 
     line_lock.acquire()
     waiting_line.append(customer_info)
+    line_lock.release()
 
-    print(f"Customer {customer_id} []: selecting a teller.")
+    print_action(f"Customer {customer_id} []: selecting a teller.")
+    customers_waiting.release()
 
     customer_info["called"].acquire()
     teller_id = customer_info["teller_id"]
 
-    print(f"Customer {customer_id} [Teller {teller_id}]: selects teller")
-    print(f"Customer {customer_id} [Teller {teller_id}]: introduces itself")
+    print_action(f"Customer {customer_id} [Teller {teller_id}]: selects teller")
+    print_action(f"Customer {customer_id} [Teller {teller_id}]: introduces itself")
     customer_info["introduced"].release()
 
     customer_info["acknowledged"].acquire()
-    print(f"Customer {customer_id} []: thread finished")
+    print_action(f"Customer {customer_id} []: thread finished")
 
 
 def main():
     teller_threads = []
     customer_threads = []
 
-    for teller_id in range(1):
+    # Start three teller threads
+    for teller_id in range(NUM_TELLERS):
         teller = threading.Thread(target=teller_worker, args=(teller_id,))
         teller_threads.append(teller)
         teller.start()
 
-    for customer_id in range(1):
+    # Change TEST_CUSTOMERS to 3, 5, or 10 for testing
+    for customer_id in range(TEST_CUSTOMERS):
         customer = threading.Thread(target=customer_worker, args=(customer_id,))
         customer_threads.append(customer)
         customer.start()
 
-    # Wait for customer and teller threads
+    # Wait for all customers
     for customer in customer_threads:
         customer.join()
+
+    # Wake tellers so each can exit
+    line_lock.acquire()
+    for teller_id in range(NUM_TELLERS):
+        waiting_line.append(None)
+    line_lock.release()
+
+    for teller_id in range(NUM_TELLERS):
+        customers_waiting.release()
 
     for teller in teller_threads:
         teller.join()
 
-    print("All threads finished")
+    print_action("All threads finished")
 
 
 if __name__ == "__main__":

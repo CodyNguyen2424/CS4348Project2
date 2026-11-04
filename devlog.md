@@ -62,3 +62,11 @@ I plan to fix these issues first and make sure one customer and one teller can c
 After fixing the bugs, I plan to update the program to handle three tellers and multiple customers.
 I will start by testing with three customers, then increase it to five and ten.
 I hope to have three tellers serving multiple customers without getting stuck and have all threads terminate correctly.
+
+# 11-4-2026 5:42pm - Session 4 End
+I fixed the three synchronization bugs from the last session.
+I added the missing release() calls for customers_waiting, line_lock, and the semaphore.
+This fixed the issue where the program would get stuck waiting for a customer or teller.
+I updated main.py to create three teller threads and multiple customer threads.
+Tellers can now continue serving customers instead of stopping after one.
+The program now currently works and the tellers were able to serve multiple customers using a shared waiting line.
