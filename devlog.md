@@ -35,7 +35,7 @@ I forgot to release a semaphore and I had acquire() and release() in the wrong o
 The bugs were fixed and the program ran eventually ran successfully.
 I noticed that the third teller had to wait until one of the first two tellers released the safe.
 
-# 11-2-2026 8:02pm - Session 3 Start
+# 11-3-2026 8:02pm - Session 3 Start
 Right now, main.py has semaphores for the safe, manager, door, and waiting line.
 The program currently only tests how three tellers access the safe.
 I plan to work on communication between one customer and one teller.
@@ -44,7 +44,7 @@ The customer will join the waiting line and signal the teller that someone is wa
 The teller will then select the customer from the queue, and the customer will introduce itself.
 I will use semaphores to make sure both threads communicate in the correct order.
 
-# 11-2-2026 9:28pm - Session 3 End
+# 11-3-2026 9:28pm - Session 3 End
 The code should allow one customer and one teller to communicate.
 It stores customer information and I added semaphores to control when the customer gets selected.
 I was able to get some basic customer-teller interaction.
@@ -52,3 +52,13 @@ There are currently some bugs.
 The program now gets stuck and hangs while getting a teller.
 The teller waits indefinitely for a customer and the customer cannot proceed after being selected.
 I plan to fix these bugs in the next session before adding more tellers and customers.
+
+# 11-4-2026 4:37pm - Session 4 Start
+Last session I worked on communication between one customer and one teller.
+The program currently gets stuck because of some bugs.
+I think the bugs are because of some synchronization issues.
+I plan to fix these issues first and make sure one customer and one teller can communicate and finish correctly.
+
+After fixing the bugs, I plan to update the program to handle three tellers and multiple customers.
+I will start by testing with three customers, then increase it to five and ten.
+I hope to have three tellers serving multiple customers without getting stuck and have all threads terminate correctly.
