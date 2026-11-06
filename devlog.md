@@ -70,3 +70,11 @@ This fixed the issue where the program would get stuck waiting for a customer or
 I updated main.py to create three teller threads and multiple customer threads.
 Tellers can now continue serving customers instead of stopping after one.
 The program now currently works and the tellers were able to serve multiple customers using a shared waiting line.
+
+# 11-5-2026 8:17pm - Session 5 Start
+main.py is able to handle three tellers and multiple customers.
+The bugs I had were fixed in the last session so now the program does not hang anymore.
+Right now the customers cannot request transactions yet.
+I plan to add deposit and withdrawal transactions in this session.
+I also plan to use more semaphores to make sure the teller asks for the transaction before the customer responds.
+I will add another signal so the teller knows when the customer leaves.
