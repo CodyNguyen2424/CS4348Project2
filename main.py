@@ -14,13 +14,11 @@ door_sem = threading.Semaphore(2)
 line_lock = threading.Semaphore(1)
 print_lock = threading.Semaphore(1)
 
-# When customers arrive
 customers_waiting = threading.Semaphore(0)
 waiting_line = deque()
 
 
 def print_action(message):
-    # Keep output lines from mixing
     print_lock.acquire()
     print(message)
     print_lock.release()
@@ -50,20 +48,40 @@ def teller_worker(teller_id):
         customer_info["introduced"].acquire()
         print_action(f"Teller {teller_id} [Customer {customer_id}]: serving a customer")
 
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: asks for transaction")
+        customer_info["transaction_requested"].release()
+
+        customer_info["transaction_given"].acquire()
+        transaction = customer_info["transaction"]
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: handling {transaction} transaction")
+
         time.sleep(0.05)
-        customer_info["acknowledged"].release()
+
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: finishes {transaction} transaction.")
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: wait for customer to leave.")
+        customer_info["transaction_finished"].release()
+
+        # Serve next customer after departure
+        customer_info["left_teller"].acquire()
 
 
 def customer_worker(customer_id):
+    transaction = random.choice(["deposit", "withdrawal"])
+
     # Keep signals separate for each customer
     customer_info = {
         "id": customer_id,
         "teller_id": None,
+        "transaction": transaction,
         "called": threading.Semaphore(0),
         "introduced": threading.Semaphore(0),
-        "acknowledged": threading.Semaphore(0)
+        "transaction_requested": threading.Semaphore(0),
+        "transaction_given": threading.Semaphore(0),
+        "transaction_finished": threading.Semaphore(0),
+        "left_teller": threading.Semaphore(0)
     }
 
+    print_action(f"Customer {customer_id} []: wants to perform a {transaction} transaction")
     print_action(f"Customer {customer_id} []: getting in line.")
 
     line_lock.acquire()
@@ -80,7 +98,15 @@ def customer_worker(customer_id):
     print_action(f"Customer {customer_id} [Teller {teller_id}]: introduces itself")
     customer_info["introduced"].release()
 
-    customer_info["acknowledged"].acquire()
+    customer_info["transaction_requested"].acquire()
+    print_action(f"Customer {customer_id} [Teller {teller_id}]: asks for {transaction} transaction")
+    customer_info["transaction_given"].release()
+
+    # Wait until teller finishes transaction
+    customer_info["transaction_finished"].acquire()
+    print_action(f"Customer {customer_id} [Teller {teller_id}]: leaves teller")
+    customer_info["left_teller"].release()
+
     print_action(f"Customer {customer_id} []: thread finished")
 
 
@@ -94,7 +120,6 @@ def main():
         teller_threads.append(teller)
         teller.start()
 
-    # Change TEST_CUSTOMERS to 3, 5, or 10 for testing
     for customer_id in range(TEST_CUSTOMERS):
         customer = threading.Thread(target=customer_worker, args=(customer_id,))
         customer_threads.append(customer)

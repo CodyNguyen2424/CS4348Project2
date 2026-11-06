@@ -78,3 +78,14 @@ Right now the customers cannot request transactions yet.
 I plan to add deposit and withdrawal transactions in this session.
 I also plan to use more semaphores to make sure the teller asks for the transaction before the customer responds.
 I will add another signal so the teller knows when the customer leaves.
+
+# 11-5-2026 10:46pm - Session 5 Start
+I updated main.py to handle deposit and withdrawal transactions.
+I randomly assigned each customer a transaction and stored it in customer_info.
+I added more semaphores so the teller can ask for the transaction and wait for the customer to respond.
+I also added transaction_finished and left_teller so customers wait until their transactions are finished and tellers wait until customers leave before serving someone else.
+
+I tested the program with 10 customers and three tellers.
+The program ran successfully and all 10 customers finished their transactions without getting stuck.
+All three teller threads also terminated correctly.
+I plan to add manager permission for withdrawal transactions next.
