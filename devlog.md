@@ -79,7 +79,7 @@ I plan to add deposit and withdrawal transactions in this session.
 I also plan to use more semaphores to make sure the teller asks for the transaction before the customer responds.
 I will add another signal so the teller knows when the customer leaves.
 
-# 11-5-2026 10:46pm - Session 5 Start
+# 11-5-2026 10:46pm - Session 5 End
 I updated main.py to handle deposit and withdrawal transactions.
 I randomly assigned each customer a transaction and stored it in customer_info.
 I added more semaphores so the teller can ask for the transaction and wait for the customer to respond.
@@ -100,3 +100,12 @@ I plan to update teller_worker() to check if a transaction is a withdrawal.
 If it is a withdrawal, the teller will need to get permission from the manager before continuing.
 I will make sure only one teller can access the manager at a time.
 Deposit transactions should not need manager permission.
+
+# 11-13-2026 8:20pm - Session 6 End
+I updated teller_worker() to require manager permission for withdrawal transactions.
+I used manager_sem to make sure only one teller can access the manager at a time.
+Deposit transactions skip the manager and continue normally.
+
+The program ran successfully and all customers completed their transactions without getting stuck.
+The withdrawals received manager permission before continuing, and all three teller threads terminated correctly.
+Next, I plan to implement safe access for both deposits and withdrawals.

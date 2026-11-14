@@ -55,7 +55,19 @@ def teller_worker(teller_id):
         transaction = customer_info["transaction"]
         print_action(f"Teller {teller_id} [Customer {customer_id}]: handling {transaction} transaction")
 
-        time.sleep(0.05)
+        # Withdrawals need manager permission
+        if transaction == "withdrawal":
+            print_action(f"Teller {teller_id} [Customer {customer_id}]: going to the manager")
+            manager_sem.acquire()
+            print_action(f"Teller {teller_id} [Customer {customer_id}]: getting manager's permission")
+
+            manager_delay = random.randint(5, 30) / 1000
+            time.sleep(manager_delay)
+
+            print_action(f"Teller {teller_id} [Customer {customer_id}]: got manager's permission")
+            manager_sem.release()
+
+        time.sleep(0.5)
 
         print_action(f"Teller {teller_id} [Customer {customer_id}]: finishes {transaction} transaction.")
         print_action(f"Teller {teller_id} [Customer {customer_id}]: wait for customer to leave.")
