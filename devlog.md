@@ -109,3 +109,14 @@ Deposit transactions skip the manager and continue normally.
 The program ran successfully and all customers completed their transactions without getting stuck.
 The withdrawals received manager permission before continuing, and all three teller threads terminated correctly.
 Next, I plan to implement safe access for both deposits and withdrawals.
+
+# 11-14-2026 5:58pm - Session 7 Start
+I have manager permission for withdrawal transactions now.
+Deposit transactions skip the manager and continue normally.
+Right now, the program still uses a fixed delay to simulate transactions and does not use the safe semaphore yet.
+
+I plan to update teller_worker() so both deposits and withdrawals need to access the safe.
+I will use safe_sem to make sure only two tellers can enter the safe at a time.
+If two tellers are already using the safe, the third teller will have to wait.
+I will add messages for when a teller approaches, enters, and leaves the safe.
+I hope to have both transactions using the safe without exceeding its capacity or causing the program to get stuck.
