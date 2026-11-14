@@ -89,3 +89,14 @@ I tested the program with 10 customers and three tellers.
 The program ran successfully and all 10 customers finished their transactions without getting stuck.
 All three teller threads also terminated correctly.
 I plan to add manager permission for withdrawal transactions next.
+
+# 11-13-2026 7:57pm - Session 6 Start
+The program can now handle three tellers and multiple customers requesting transactions.
+I also added semaphores to make sure customers wait until their transactions are finished before leaving.
+Right now, both deposits and withdrawals are handled the same way.
+I am going to add manager permission for withdrawals before they can be processed.
+
+I plan to update teller_worker() to check if a transaction is a withdrawal.
+If it is a withdrawal, the teller will need to get permission from the manager before continuing.
+I will make sure only one teller can access the manager at a time.
+Deposit transactions should not need manager permission.
