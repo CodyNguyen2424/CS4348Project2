@@ -131,3 +131,13 @@ The transaction delay and the manager delay is a random delay between 10 and 50 
 The program ran successfully and all customers finished their transactions without getting stuck.
 The safe semaphore limits access to two tellers at a time, and the manager semaphore only allows one teller at a time.
 After this I will probably plan to add customer arrival delays and use door_sem to control customers entering and leaving the bank.
+
+# 11-14-2026 11:52pm - Session 8 Start
+I have added safe access for both deposit and withdrawal transactions.
+The program now uses safe_sem to make sure only two tellers can enter the safe at a time.
+Withdrawals still need manager permission before using the safe.
+Right now, customers join the waiting line immediately, and the program does not use door_sem yet.
+
+I plan to add synchronization so the bank only opens when all three tellers are ready.
+I plan to use door_sem to make sure only two customers can enter or leave the bank at a time.
+Customers will need to acquire the door semaphore before entering or leaving and release it afterward.
