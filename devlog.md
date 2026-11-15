@@ -120,3 +120,14 @@ I will use safe_sem to make sure only two tellers can enter the safe at a time.
 If two tellers are already using the safe, the third teller will have to wait.
 I will add messages for when a teller approaches, enters, and leaves the safe.
 I hope to have both transactions using the safe without exceeding its capacity or causing the program to get stuck.
+
+# 11-14-2026 6:21pm - Session 7 End
+I updated teller_worker() so both deposit and withdrawal transactions use the safe.
+I used safe_sem to make sure only two tellers can enter the safe at a time.
+I also added messages for when a teller approaches, enters, and leaves the safe.
+Withdrawals still need manager permission before entering the safe.
+The transaction delay and the manager delay is a random delay between 10 and 50 milliseconds.
+
+The program ran successfully and all customers finished their transactions without getting stuck.
+The safe semaphore limits access to two tellers at a time, and the manager semaphore only allows one teller at a time.
+After this I will probably plan to add customer arrival delays and use door_sem to control customers entering and leaving the bank.

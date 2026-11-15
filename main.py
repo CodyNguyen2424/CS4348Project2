@@ -35,7 +35,7 @@ def teller_worker(teller_id):
         customer_info = waiting_line.popleft()
         line_lock.release()
 
-        # Stop once no customers remain
+        # Stop when no customers
         if customer_info is None:
             print_action(f"Teller {teller_id} []: thread finished")
             break
@@ -44,7 +44,7 @@ def teller_worker(teller_id):
         customer_info["teller_id"] = teller_id
         customer_info["called"].release()
 
-        # Wait for customer introduction
+        # Wait for customer intro
         customer_info["introduced"].acquire()
         print_action(f"Teller {teller_id} [Customer {customer_id}]: serving a customer")
 
@@ -55,7 +55,7 @@ def teller_worker(teller_id):
         transaction = customer_info["transaction"]
         print_action(f"Teller {teller_id} [Customer {customer_id}]: handling {transaction} transaction")
 
-        # Withdrawals need manager permission
+        # Withdrawals need manager
         if transaction == "withdrawal":
             print_action(f"Teller {teller_id} [Customer {customer_id}]: going to the manager")
             manager_sem.acquire()
@@ -67,20 +67,29 @@ def teller_worker(teller_id):
             print_action(f"Teller {teller_id} [Customer {customer_id}]: got manager's permission")
             manager_sem.release()
 
-        time.sleep(0.5)
+        # Only two tellers access safe
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: going to safe")
+        safe_sem.acquire()
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: enter safe")
+
+        safe_delay = random.randint(10, 50) / 1000
+        time.sleep(safe_delay)
+
+        print_action(f"Teller {teller_id} [Customer {customer_id}]: leaving safe")
+        safe_sem.release()
 
         print_action(f"Teller {teller_id} [Customer {customer_id}]: finishes {transaction} transaction.")
         print_action(f"Teller {teller_id} [Customer {customer_id}]: wait for customer to leave.")
         customer_info["transaction_finished"].release()
 
-        # Serve next customer after departure
+        # Serve next customer
         customer_info["left_teller"].acquire()
 
 
 def customer_worker(customer_id):
     transaction = random.choice(["deposit", "withdrawal"])
 
-    # Keep signals separate for each customer
+    # Separate signals for each customer
     customer_info = {
         "id": customer_id,
         "teller_id": None,
@@ -141,7 +150,7 @@ def main():
     for customer in customer_threads:
         customer.join()
 
-    # Wake tellers so each can exit
+    # Wake tellers to exit
     line_lock.acquire()
     for teller_id in range(NUM_TELLERS):
         waiting_line.append(None)
