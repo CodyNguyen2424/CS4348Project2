@@ -174,3 +174,12 @@ All three teller threads also terminated correctly.
 The bank closing message printed after all customers and tellers finished.
 
 The next session I plan to create the README and do a final check on the project requirepments.
+
+# 11-15-2026 5:57pm - Session 10 Start
+I updated main.py to run the full bank simulation with 50 customers and three tellers.
+The program now handles customer transactions, manager permission, safe access, and bank entrance restrictions.
+I also updated the shutdown process so all customers leave before the tellers finish and the bank closes.
+The program ran successfully with all 50 customers.
+
+Now, I plan to review the entire program and compare its output with the sample output.
+I plan to write the README and make sure my devlog is accurate.
