@@ -150,3 +150,13 @@ I used door_sem to make sure only two customers can enter or leave the bank at a
 
 The program ran successfully and all customers completed their transactions and left the bank without getting stuck.
 The door semaphore limits how many customers can use the entrance at once.
+
+# 11-15-2026 3:39pm - Session 9 Start
+I added bank opening synchronization and customer entrance restrictions.
+The program now waits until all three tellers are ready before starting customers.
+I also added random customer arrival delays and used door_sem to limit how many customers can enter or leave at the same time.
+
+I plan to increase the simulation to 50 customers instead of the current 10 customers I have been using for testing.
+I will keep the three teller threads and make sure they can continue serving customers from the shared waiting line.
+I also plan to check that customers wait when all tellers are busy and that each customer finishes their transaction before leaving.
+The program already uses join() to wait for customers and None in the waiting queue to stop tellers.
