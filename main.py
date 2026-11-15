@@ -15,6 +15,7 @@ line_lock = threading.Semaphore(1)
 print_lock = threading.Semaphore(1)
 
 customers_waiting = threading.Semaphore(0)
+tellers_ready = threading.Semaphore(0)
 waiting_line = deque()
 
 
@@ -25,8 +26,10 @@ def print_action(message):
 
 
 def teller_worker(teller_id):
+    print_action(f"Teller {teller_id} []: ready to serve")
+    tellers_ready.release()
+
     while True:
-        print_action(f"Teller {teller_id} []: ready to serve")
         print_action(f"Teller {teller_id} []: waiting for a customer")
 
         customers_waiting.acquire()
@@ -84,6 +87,7 @@ def teller_worker(teller_id):
 
         # Serve next customer
         customer_info["left_teller"].acquire()
+        print_action(f"Teller {teller_id} []: ready to serve")
 
 
 def customer_worker(customer_id):
@@ -103,6 +107,17 @@ def customer_worker(customer_id):
     }
 
     print_action(f"Customer {customer_id} []: wants to perform a {transaction} transaction")
+
+    arrival_delay = random.randint(0, 100) / 1000
+    time.sleep(arrival_delay)
+    print_action(f"Customer {customer_id} []: going to bank.")
+
+    # Share doorway with one other customer
+    door_sem.acquire()
+    print_action(f"Customer {customer_id} []: entering bank.")
+    time.sleep(0.001)
+    door_sem.release()
+
     print_action(f"Customer {customer_id} []: getting in line.")
 
     line_lock.acquire()
@@ -128,6 +143,11 @@ def customer_worker(customer_id):
     print_action(f"Customer {customer_id} [Teller {teller_id}]: leaves teller")
     customer_info["left_teller"].release()
 
+    door_sem.acquire()
+    print_action(f"Customer {customer_id} []: leaves the bank")
+    time.sleep(0.001)
+    door_sem.release()
+
     print_action(f"Customer {customer_id} []: thread finished")
 
 
@@ -140,6 +160,10 @@ def main():
         teller = threading.Thread(target=teller_worker, args=(teller_id,))
         teller_threads.append(teller)
         teller.start()
+
+    # Open bank after each teller is ready
+    for teller_id in range(NUM_TELLERS):
+        tellers_ready.acquire()
 
     for customer_id in range(TEST_CUSTOMERS):
         customer = threading.Thread(target=customer_worker, args=(customer_id,))

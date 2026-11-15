@@ -141,3 +141,12 @@ Right now, customers join the waiting line immediately, and the program does not
 I plan to add synchronization so the bank only opens when all three tellers are ready.
 I plan to use door_sem to make sure only two customers can enter or leave the bank at a time.
 Customers will need to acquire the door semaphore before entering or leaving and release it afterward.
+
+# 11-15-2026 12:54pm - Session 8 End
+I updated main.py to handle bank opening and customer entrance.
+I added tellers_ready to make sure all three tellers are ready before customers can enter the bank.
+I also added random arrival delays between 0 and 100 milliseconds.
+I used door_sem to make sure only two customers can enter or leave the bank at a time.
+
+The program ran successfully and all customers completed their transactions and left the bank without getting stuck.
+The door semaphore limits how many customers can use the entrance at once.
