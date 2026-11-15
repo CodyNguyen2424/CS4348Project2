@@ -5,7 +5,6 @@ from collections import deque
 
 NUM_TELLERS = 3
 NUM_CUSTOMERS = 50
-TEST_CUSTOMERS = 10
 
 # Shared bank resources
 safe_sem = threading.Semaphore(2)
@@ -40,7 +39,7 @@ def teller_worker(teller_id):
 
         # Stop when no customers
         if customer_info is None:
-            print_action(f"Teller {teller_id} []: thread finished")
+            print_action(f"Teller {teller_id} []: leaving for the day")
             break
 
         customer_id = customer_info["id"]
@@ -165,7 +164,8 @@ def main():
     for teller_id in range(NUM_TELLERS):
         tellers_ready.acquire()
 
-    for customer_id in range(TEST_CUSTOMERS):
+    # Start all 50 customers
+    for customer_id in range(NUM_CUSTOMERS):
         customer = threading.Thread(target=customer_worker, args=(customer_id,))
         customer_threads.append(customer)
         customer.start()
@@ -186,7 +186,7 @@ def main():
     for teller in teller_threads:
         teller.join()
 
-    print_action("All threads finished")
+    print_action("The bank closes for the day.")
 
 
 if __name__ == "__main__":

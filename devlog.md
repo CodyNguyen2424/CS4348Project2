@@ -160,3 +160,17 @@ I plan to increase the simulation to 50 customers instead of the current 10 cust
 I will keep the three teller threads and make sure they can continue serving customers from the shared waiting line.
 I also plan to check that customers wait when all tellers are busy and that each customer finishes their transaction before leaving.
 The program already uses join() to wait for customers and None in the waiting queue to stop tellers.
+
+# 11-15-2026 4:12pm - Session 9 End
+I updated main.py to run the full simulation with 50 customers instead of 10.
+I kept the three teller threads and used the shared waiting line to handle customer transactions.
+I also kept join() to make sure all customers finish and leave the bank before shutting down the tellers.
+I updated the teller shutdown messages to say they are leaving for the day.
+I also added a final message to print when the bank closes.
+
+I tested the program with 50 customers and three tellers.
+The program ran successfully and all 50 customers completed their transactions and left the bank without getting stuck.
+All three teller threads also terminated correctly.
+The bank closing message printed after all customers and tellers finished.
+
+The next session I plan to create the README and do a final check on the project requirepments.
