@@ -126,7 +126,7 @@ I updated teller_worker() so both deposit and withdrawal transactions use the sa
 I used safe_sem to make sure only two tellers can enter the safe at a time.
 I also added messages for when a teller approaches, enters, and leaves the safe.
 Withdrawals still need manager permission before entering the safe.
-The transaction delay and the manager delay is a random delay between 10 and 50 milliseconds.
+There is now a delay of 5–30 ms for the manager and 10–50 ms for safe processing.
 
 The program ran successfully and all customers finished their transactions without getting stuck.
 The safe semaphore limits access to two tellers at a time, and the manager semaphore only allows one teller at a time.
@@ -183,3 +183,20 @@ The program ran successfully with all 50 customers.
 
 Now, I plan to review the entire program and compare its output with the sample output.
 I plan to write the README and make sure my devlog is accurate.
+
+# 11-15-2026 7:17pm - Session 10 End
+I reviewed main.py and compared the program output with the provided sample output.
+I noticed some differences in the customer messages, so I updated the code to print when customers go to the door and removed the extra thread finished messages I used for testing.
+I also checked that the program follows the required output format.
+I finished README.md with instructions on how to run the program and explanations of the main functions and shared resources.
+
+I tested the full simulation multiple times with 50 customers and three tellers.
+I also tested different transaction combinations and had all 50 customers arrive at the same time to check for synchronization problems.
+All the tests completed successfully without getting stuck.
+Only one teller can access the manager at a time, two tellers can use the safe, and two customers can use the door.
+All 50 customers completed their transactions and left the bank before the three tellers terminated.
+The bank closing message was also printed last.
+
+I reviewed the devlog, main.py, and the README.
+I removed the project 2 instructions and sample files from the repo.
+There should only be README.md, main.py, and devlog.md.

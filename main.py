@@ -140,14 +140,14 @@ def customer_worker(customer_id):
     # Wait until teller finishes transaction
     customer_info["transaction_finished"].acquire()
     print_action(f"Customer {customer_id} [Teller {teller_id}]: leaves teller")
-    customer_info["left_teller"].release()
 
+    print_action(f"Customer {customer_id} []: goes to door")
     door_sem.acquire()
-    print_action(f"Customer {customer_id} []: leaves the bank")
     time.sleep(0.001)
+    print_action(f"Customer {customer_id} []: leaves the bank")
     door_sem.release()
 
-    print_action(f"Customer {customer_id} []: thread finished")
+    customer_info["left_teller"].release()
 
 
 def main():
